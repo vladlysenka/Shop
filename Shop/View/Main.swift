@@ -5,7 +5,7 @@ import SwiftUI
 struct Main: View {
     @Environment(ProductViewModel.self) private var vm
     @Environment(\.colorScheme) private var scheme
-
+    
     @State private var displayType: DisplayType = .list
     @State private var isCart: Bool = false
     let columns: [GridItem] = Array(repeating: GridItem(spacing: -35), count: 2)
@@ -49,7 +49,7 @@ struct Main: View {
                     Text("\(vm.productsCart.count)")
                         .font(.system(size: 18, weight: .bold, design: .rounded))
                         .foregroundStyle(scheme == .light ? .black : .white)
-         
+                    
                 }
                 .padding()
                 .background(.ultraThinMaterial, in: .capsule)
@@ -57,7 +57,21 @@ struct Main: View {
             }
         }
         .sheet(isPresented: $isCart) {
-//            ForEach
+            NavigationStack {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 15) {
+                        ForEach(vm.productsCart, id: \.self) { product in
+                            Text(product.name)
+                                .font(.system(size: 18, weight: .regular, design: .rounded))
+                        }
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
+                    .safeAreaPadding(.horizontal)
+                }
+                .navigationTitle("Корзина")
+                .navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
     
